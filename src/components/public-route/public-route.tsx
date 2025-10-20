@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useSelector } from '../../services/store';
 import { getIsAuthenticated, getAuthLoading } from '../../services/selectors';
@@ -16,10 +16,8 @@ export const PublicRoute: React.FC<PublicRouteProps> = ({ children }) => {
     return <div>Проверка авторизации...</div>;
   }
 
-  const redirectTo = useMemo(
-    () => location.state?.from?.pathname || '/',
-    [location]
-  );
+ 
+  const redirectTo = location.state?.from?.pathname || '/';
 
   if (isAuthenticated) {
     return <Navigate to={redirectTo} replace />;
