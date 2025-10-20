@@ -16,7 +16,6 @@ export const PublicRoute: React.FC<PublicRouteProps> = ({ children }) => {
     return <div>Проверка авторизации...</div>;
   }
 
- 
   const redirectTo = location.state?.from?.pathname || '/';
 
   if (isAuthenticated) {
