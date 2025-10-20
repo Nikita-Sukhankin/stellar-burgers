@@ -27,14 +27,17 @@ export const LoginUI: FC<LoginUIProps> = ({
         <>
           <div className='pb-6'>
             <Input
-              type='email'
-              placeholder='E-mail'
-              onChange={(e) => setEmail(e.target.value)}
-              value={email}
-              name='email'
-              error={false}
-              errorText=''
-              size='default'
+              {...({
+                type: 'email',
+                placeholder: 'E-mail',
+                onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+                  setEmail(e.target.value),
+                value: email,
+                name: 'email',
+                error: false,
+                errorText: '',
+                size: 'default'
+              } as any)}
             />
           </div>
           <div className='pb-6'>

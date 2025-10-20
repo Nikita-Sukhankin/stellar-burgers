@@ -26,41 +26,47 @@ export const ProfileUI: FC<ProfileUIProps> = ({
       <>
         <div className='pb-6'>
           <Input
-            type={'text'}
-            placeholder={'Имя'}
-            onChange={handleInputChange}
-            value={formValue.name}
-            name={'name'}
-            error={false}
-            errorText={''}
-            size={'default'}
-            icon={'EditIcon'}
+            {...({
+              type: 'text',
+              placeholder: 'Имя',
+              onChange: handleInputChange,
+              value: formValue.name,
+              name: 'name',
+              error: false,
+              errorText: '',
+              size: 'default',
+              icon: 'EditIcon'
+            } as any)}
           />
         </div>
         <div className='pb-6'>
           <Input
-            type={'email'}
-            placeholder={'E-mail'}
-            onChange={handleInputChange}
-            value={formValue.email}
-            name={'email'}
-            error={false}
-            errorText={''}
-            size={'default'}
-            icon={'EditIcon'}
+            {...({
+              type: 'email',
+              placeholder: 'E-mail',
+              onChange: handleInputChange,
+              value: formValue.email,
+              name: 'email',
+              error: false,
+              errorText: '',
+              size: 'default',
+              icon: 'EditIcon'
+            } as any)}
           />
         </div>
         <div className='pb-6'>
           <Input
-            type={'password'}
-            placeholder={'Пароль'}
-            onChange={handleInputChange}
-            value={formValue.password}
-            name={'password'}
-            error={false}
-            errorText={''}
-            size={'default'}
-            icon={'EditIcon'}
+            {...({
+              type: 'password',
+              placeholder: 'Пароль',
+              onChange: handleInputChange,
+              value: formValue.password,
+              name: 'password',
+              error: false,
+              errorText: '',
+              size: 'default',
+              icon: 'EditIcon'
+            } as any)}
           />
         </div>
         {isFormChanged && (

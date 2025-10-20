@@ -1,14 +1,40 @@
-import { useState, useRef, useEffect, FC } from 'react';
+import { useState, useRef, useEffect, FC, useMemo } from 'react';
 import { useInView } from 'react-intersection-observer';
 
-import { TTabMode } from '@utils-types';
+import { TTabMode, TIngredient } from '@utils-types';
 import { BurgerIngredientsUI } from '../ui/burger-ingredients';
+import { Preloader } from '@ui';
+import { useSelector, useDispatch } from '../../services/store';
+import {
+  getIngredients,
+  getIngredientsLoading
+} from '../../services/selectors';
+import { fetchIngredients } from '../../services/slices/ingredients-slice';
 
 export const BurgerIngredients: FC = () => {
   /** TODO: взять переменные из стора */
-  const buns = [];
-  const mains = [];
-  const sauces = [];
+  const dispatch = useDispatch();
+  const ingredients = useSelector(getIngredients);
+  const isLoading = useSelector(getIngredientsLoading);
+
+  useEffect(() => {
+    if (ingredients.length === 0) {
+      dispatch(fetchIngredients());
+    }
+  }, [dispatch, ingredients.length]);
+
+  const { buns, mains, sauces } = useMemo(
+    () => ({
+      buns: ingredients.filter((ingredient) => ingredient.type === 'bun'),
+      mains: ingredients.filter((ingredient) => ingredient.type === 'main'),
+      sauces: ingredients.filter((ingredient) => ingredient.type === 'sauce')
+    }),
+    [ingredients]
+  );
+
+  if (isLoading) {
+    return <Preloader />;
+  }
 
   const [currentTab, setCurrentTab] = useState<TTabMode>('bun');
   const titleBunRef = useRef<HTMLHeadingElement>(null);
@@ -46,8 +72,6 @@ export const BurgerIngredients: FC = () => {
     if (tab === 'sauce')
       titleSaucesRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
-
-  return null;
 
   return (
     <BurgerIngredientsUI

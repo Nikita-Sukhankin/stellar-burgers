@@ -1,16 +1,34 @@
 import { ProfileUI } from '@ui-pages';
-import { FC, SyntheticEvent, useEffect, useState } from 'react';
+import {
+  FC,
+  SyntheticEvent,
+  useEffect,
+  useState,
+  useCallback,
+  useMemo
+} from 'react';
+import { useSelector, useDispatch } from '../../services/store';
+import { getUser, getAuthError } from '../../services/selectors';
+import {
+  updateUser,
+  logoutUser,
+  clearError
+} from '../../services/slices/auth-slice';
+
+interface FormValue {
+  name: string;
+  email: string;
+  password: string;
+}
 
 export const Profile: FC = () => {
-  /** TODO: взять переменную из стора */
-  const user = {
-    name: '',
-    email: ''
-  };
+  const dispatch = useDispatch();
+  const user = useSelector(getUser);
+  const error = useSelector(getAuthError);
 
-  const [formValue, setFormValue] = useState({
-    name: user.name,
-    email: user.email,
+  const [formValue, setFormValue] = useState<FormValue>({
+    name: user?.name || '',
+    email: user?.email || '',
     password: ''
   });
 
@@ -22,30 +40,55 @@ export const Profile: FC = () => {
     }));
   }, [user]);
 
-  const isFormChanged =
-    formValue.name !== user?.name ||
-    formValue.email !== user?.email ||
-    !!formValue.password;
+  const isFormChanged = useMemo(
+    () =>
+      formValue.name !== user?.name ||
+      formValue.email !== user?.email ||
+      !!formValue.password,
+    [formValue, user]
+  );
 
-  const handleSubmit = (e: SyntheticEvent) => {
-    e.preventDefault();
-  };
+  const handleSubmit = useCallback(
+    (e: SyntheticEvent) => {
+      e.preventDefault();
+      dispatch(clearError());
+      const updateData: { name: string; email: string; password?: string } = {
+        name: formValue.name,
+        email: formValue.email
+      };
+      if (formValue.password) {
+        updateData.password = formValue.password;
+      }
+      dispatch(updateUser(updateData));
+    },
+    [dispatch, formValue]
+  );
 
-  const handleCancel = (e: SyntheticEvent) => {
-    e.preventDefault();
-    setFormValue({
-      name: user.name,
-      email: user.email,
-      password: ''
-    });
-  };
+  const handleCancel = useCallback(
+    (e: SyntheticEvent) => {
+      e.preventDefault();
+      setFormValue({
+        name: user?.name || '',
+        email: user?.email || '',
+        password: ''
+      });
+    },
+    [user]
+  );
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormValue((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value
-    }));
-  };
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setFormValue((prevState) => ({
+        ...prevState,
+        [e.target.name]: e.target.value
+      }));
+    },
+    []
+  );
+
+  const handleLogout = useCallback(() => {
+    dispatch(logoutUser());
+  }, [dispatch]);
 
   return (
     <ProfileUI
@@ -54,8 +97,7 @@ export const Profile: FC = () => {
       handleCancel={handleCancel}
       handleSubmit={handleSubmit}
       handleInputChange={handleInputChange}
+      updateUserError={error || ''}
     />
   );
-
-  return null;
 };
