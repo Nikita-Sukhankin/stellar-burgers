@@ -26,21 +26,27 @@ export const ResetPasswordUI: FC<ResetPasswordUIProps> = ({
       >
         <div className='pb-6'>
           <PasswordInput
-            onChange={(e) => setPassword(e.target.value)}
-            value={password}
-            name='password'
+            {...({
+              onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+                setPassword(e.target.value),
+              value: password,
+              name: 'password'
+            } as any)}
           />
         </div>
         <div className='pb-6'>
           <Input
-            type='text'
-            placeholder='Введите код из письма'
-            onChange={(e) => setToken(e.target.value)}
-            value={token}
-            name='token'
-            error={false}
-            errorText=''
-            size='default'
+            {...({
+              type: 'text',
+              placeholder: 'Введите код из письма',
+              onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+                setToken(e.target.value),
+              value: token,
+              name: 'token',
+              error: false,
+              errorText: '',
+              size: 'default'
+            } as any)}
           />
         </div>
         <div className={`pb-6 ${styles.button}`}>
