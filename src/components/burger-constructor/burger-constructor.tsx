@@ -26,7 +26,7 @@ export const BurgerConstructor: FC = () => {
 
   const constructorItems = {
     bun,
-    ingredients: ingredients || []
+    ingredients: ingredients || [] // ← ПРАВИЛЬНО
   };
 
   const onOrderClick = () => {
