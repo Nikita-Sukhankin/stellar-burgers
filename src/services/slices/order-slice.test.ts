@@ -14,72 +14,61 @@ const mockOrder: TOrder = {
 };
 
 describe('order slice', () => {
+  const initialState = {
+    orderRequest: false,
+    orderModalData: null,
+    currentOrder: null,
+    error: null
+  };
+
   test('should return the initial state', () => {
-    expect(orderReducer(undefined, { type: 'unknown' })).toEqual({
-      orderRequest: false,
-      orderModalData: null,
-      currentOrder: null,
-      error: null
-    });
+    expect(orderReducer(undefined, { type: 'unknown' })).toEqual(initialState);
   });
 
   test('should handle closeOrderModal', () => {
-    const state = { orderRequest: false, orderModalData: mockOrder, currentOrder: null, error: null };
-    expect(orderReducer(state, closeOrderModal())).toEqual({
-      orderRequest: false,
-      orderModalData: null,
-      currentOrder: null,
-      error: null
-    });
+    const state = { ...initialState, orderModalData: mockOrder };
+    const expectedState = { ...state, orderModalData: null };
+    expect(orderReducer(state, closeOrderModal())).toEqual(expectedState);
   });
 
   test('should handle clearError', () => {
-    const state = { orderRequest: false, orderModalData: null, currentOrder: null, error: 'Some error' };
-    expect(orderReducer(state, clearError())).toEqual({
-      orderRequest: false,
-      orderModalData: null,
-      currentOrder: null,
-      error: null
-    });
+    const state = { ...initialState, error: 'Some error' };
+    const expectedState = { ...state, error: null };
+    expect(orderReducer(state, clearError())).toEqual(expectedState);
   });
 
   test('should handle createOrder.pending', () => {
     const action = { type: createOrder.pending.type };
-    expect(orderReducer(undefined, action)).toEqual({
-      orderRequest: true,
-      orderModalData: null,
-      currentOrder: null,
-      error: null
-    });
+    const expectedState = { ...initialState, orderRequest: true };
+    expect(orderReducer(initialState, action)).toEqual(expectedState);
   });
 
   test('should handle createOrder.fulfilled', () => {
     const action = { type: createOrder.fulfilled.type, payload: mockOrder };
-    expect(orderReducer(undefined, action)).toEqual({
+    const expectedState = {
+      ...initialState,
       orderRequest: false,
-      orderModalData: mockOrder,
-      currentOrder: null,
-      error: null
-    });
+      orderModalData: mockOrder
+    };
+    expect(orderReducer(initialState, action)).toEqual(expectedState);
   });
 
   test('should handle createOrder.rejected', () => {
     const action = { type: createOrder.rejected.type, payload: 'Order failed' };
-    expect(orderReducer(undefined, action)).toEqual({
+    const expectedState = {
+      ...initialState,
       orderRequest: false,
-      orderModalData: null,
-      currentOrder: null,
       error: 'Order failed'
-    });
+    };
+    expect(orderReducer(initialState, action)).toEqual(expectedState);
   });
 
   test('should handle fetchOrderByNumber.fulfilled', () => {
     const action = { type: fetchOrderByNumber.fulfilled.type, payload: mockOrder };
-    expect(orderReducer(undefined, action)).toEqual({
-      orderRequest: false,
-      orderModalData: null,
-      currentOrder: mockOrder,
-      error: null
-    });
+    const expectedState = {
+      ...initialState,
+      currentOrder: mockOrder
+    };
+    expect(orderReducer(initialState, action)).toEqual(expectedState);
   });
 });

@@ -14,47 +14,45 @@ const mockOrder: TOrder = {
 };
 
 describe('user orders slice', () => {
+  const initialState = {
+    orders: [],
+    isLoading: false,
+    error: null
+  };
+
   test('should return the initial state', () => {
-    expect(userOrdersReducer(undefined, { type: 'unknown' })).toEqual({
-      orders: [],
-      isLoading: false,
-      error: null
-    });
+    expect(userOrdersReducer(undefined, { type: 'unknown' })).toEqual(initialState);
   });
 
   test('should handle clearError', () => {
-    const state = { orders: [], isLoading: false, error: 'Some error' };
-    expect(userOrdersReducer(state, clearError())).toEqual({
-      orders: [],
-      isLoading: false,
-      error: null
-    });
+    const state = { ...initialState, error: 'Some error' };
+    const expectedState = { ...state, error: null };
+    expect(userOrdersReducer(state, clearError())).toEqual(expectedState);
   });
 
   test('should handle fetchUserOrders.pending', () => {
     const action = { type: fetchUserOrders.pending.type };
-    expect(userOrdersReducer(undefined, action)).toEqual({
-      orders: [],
-      isLoading: true,
-      error: null
-    });
+    const expectedState = { ...initialState, isLoading: true };
+    expect(userOrdersReducer(initialState, action)).toEqual(expectedState);
   });
 
   test('should handle fetchUserOrders.fulfilled', () => {
     const action = { type: fetchUserOrders.fulfilled.type, payload: [mockOrder] };
-    expect(userOrdersReducer(undefined, action)).toEqual({
+    const expectedState = {
+      ...initialState,
       orders: [mockOrder],
-      isLoading: false,
-      error: null
-    });
+      isLoading: false
+    };
+    expect(userOrdersReducer(initialState, action)).toEqual(expectedState);
   });
 
   test('should handle fetchUserOrders.rejected', () => {
     const action = { type: fetchUserOrders.rejected.type, payload: 'Fetch failed' };
-    expect(userOrdersReducer(undefined, action)).toEqual({
-      orders: [],
+    const expectedState = {
+      ...initialState,
       isLoading: false,
       error: 'Fetch failed'
-    });
+    };
+    expect(userOrdersReducer(initialState, action)).toEqual(expectedState);
   });
 });

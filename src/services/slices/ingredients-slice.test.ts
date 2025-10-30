@@ -18,47 +18,45 @@ const mockIngredient: TIngredient = {
 };
 
 describe('ingredients slice', () => {
+  const initialState = {
+    ingredients: [],
+    isLoading: false,
+    error: null
+  };
+
   test('should return the initial state', () => {
-    expect(ingredientsReducer(undefined, { type: 'unknown' })).toEqual({
-      ingredients: [],
-      isLoading: false,
-      error: null
-    });
+    expect(ingredientsReducer(undefined, { type: 'unknown' })).toEqual(initialState);
   });
 
   test('should handle clearError', () => {
-    const state = { ingredients: [], isLoading: false, error: 'Some error' };
-    expect(ingredientsReducer(state, clearError())).toEqual({
-      ingredients: [],
-      isLoading: false,
-      error: null
-    });
+    const state = { ...initialState, error: 'Some error' };
+    const expectedState = { ...state, error: null };
+    expect(ingredientsReducer(state, clearError())).toEqual(expectedState);
   });
 
   test('should handle fetchIngredients.pending', () => {
     const action = { type: fetchIngredients.pending.type };
-    expect(ingredientsReducer(undefined, action)).toEqual({
-      ingredients: [],
-      isLoading: true,
-      error: null
-    });
+    const expectedState = { ...initialState, isLoading: true };
+    expect(ingredientsReducer(initialState, action)).toEqual(expectedState);
   });
 
   test('should handle fetchIngredients.fulfilled', () => {
     const action = { type: fetchIngredients.fulfilled.type, payload: [mockIngredient] };
-    expect(ingredientsReducer(undefined, action)).toEqual({
+    const expectedState = {
+      ...initialState,
       ingredients: [mockIngredient],
-      isLoading: false,
-      error: null
-    });
+      isLoading: false
+    };
+    expect(ingredientsReducer(initialState, action)).toEqual(expectedState);
   });
 
   test('should handle fetchIngredients.rejected', () => {
     const action = { type: fetchIngredients.rejected.type, payload: 'Fetch failed' };
-    expect(ingredientsReducer(undefined, action)).toEqual({
-      ingredients: [],
+    const expectedState = {
+      ...initialState,
       isLoading: false,
       error: 'Fetch failed'
-    });
+    };
+    expect(ingredientsReducer(initialState, action)).toEqual(expectedState);
   });
 });
