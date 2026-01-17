@@ -1,4 +1,4 @@
-import { forwardRef, useMemo } from 'react';
+import { forwardRef, useMemo, useCallback } from 'react';
 import { TIngredientsCategoryProps } from './type';
 import { TIngredient, TConstructorIngredient } from '@utils-types';
 import { IngredientsCategoryUI } from '../ui/ingredients-category';
@@ -29,18 +29,21 @@ export const IngredientsCategory = forwardRef<
     return counters;
   }, [bun, constructorIngredients]);
 
-  const handleAddIngredient = (ingredient: TIngredient) => {
-    const constructorIngredient: TConstructorIngredient = {
-      ...ingredient,
-      id: `${ingredient._id}-${Date.now()}`
-    };
+  const handleAddIngredient = useCallback(
+    (ingredient: TIngredient) => {
+      const constructorIngredient: TConstructorIngredient = {
+        ...ingredient,
+        id: `${ingredient._id}-${Date.now()}`
+      };
 
-    if (ingredient.type === 'bun') {
-      dispatch(addBun(constructorIngredient));
-    } else {
-      dispatch(addIngredient(constructorIngredient));
-    }
-  };
+      if (ingredient.type === 'bun') {
+        dispatch(addBun(constructorIngredient));
+      } else {
+        dispatch(addIngredient(constructorIngredient));
+      }
+    },
+    [dispatch]
+  );
 
   return (
     <IngredientsCategoryUI

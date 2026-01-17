@@ -9,12 +9,14 @@ export const BurgerIngredient: FC<TBurgerIngredientProps> = memo(
     const location = useLocation();
 
     return (
-      <BurgerIngredientUI
-        ingredient={ingredient}
-        count={count}
-        locationState={{ background: location }}
-        handleAdd={handleAdd}
-      />
+      <div data-testid='ingredient'>
+        <BurgerIngredientUI
+          ingredient={ingredient}
+          count={count}
+          locationState={{ background: location }}
+          handleAdd={handleAdd}
+        />
+      </div>
     );
   }
 );

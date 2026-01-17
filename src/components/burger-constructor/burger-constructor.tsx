@@ -1,4 +1,4 @@
-import { FC, useMemo } from 'react';
+import { FC, useMemo, useEffect } from 'react'; // ← добавлен useEffect
 import { useNavigate } from 'react-router-dom';
 import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
@@ -14,6 +14,7 @@ import {
   createOrder,
   closeOrderModal
 } from '../../services/slices/order-slice';
+import { clearConstructor } from '../../services/slices/constructor-slice'; // ← новый импорт
 
 export const BurgerConstructor: FC = () => {
   const dispatch = useDispatch();
@@ -49,6 +50,13 @@ export const BurgerConstructor: FC = () => {
   const handleCloseOrderModal = () => {
     dispatch(closeOrderModal());
   };
+
+  // ✅ Очищаем конструктор после успешного заказа
+  useEffect(() => {
+    if (orderModalData) {
+      dispatch(clearConstructor());
+    }
+  }, [orderModalData, dispatch]);
 
   const price = useMemo(
     () =>
